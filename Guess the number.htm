@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guess the Number Game</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    background-color: #ff4d4d; /* Red background color */
+    color: white;
+  }
+  .container {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+  }
+  h1 {
+    margin-top: 0;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Guess the Number Game</h1>
+  <p>Try to guess the number between 1 and 50.</p>
+  <input type="number" id="guess" min="1" max="50" onkeydown="if (event.key === 'Enter') checkGuess()">
+  <button onclick="checkGuess()">Submit Guess</button>
+  <button onclick="refreshGame()">Refresh Game</button>
+  <p id="message"></p>
+  <p>Attempts: <span id="attempts">0</span></p>
+</div>
+
+<script>
+  let targetNumber = generateRandomNumber();
+  let attempts = 0;
+  let maxAttempts = 10;
+  let score = maxAttempts;
+
+  function generateRandomNumber() {
+    return Math.floor(Math.random() * 50) + 1;
+  }
+
+  function refreshGame() {
+    targetNumber = generateRandomNumber();
+    attempts = 0;
+    score = maxAttempts;
+    document.getElementById('guess').value = '';
+    document.getElementById('guess').disabled = false;
+    document.getElementById('message').textContent = '';
+    document.getElementById('attempts').textContent = '0';
+  }
+
+  function checkGuess() {
+    const guess = parseInt(document.getElementById('guess').value);
+    attempts++;
+    score--;
+
+    const messageElement = document.getElementById('message');
+    const attemptsElement = document.getElementById('attempts');
+    
+    if (guess === targetNumber) {
+      messageElement.textContent = `Congratulations! You guessed the number ${targetNumber} in ${attempts} attempts.`;
+      messageElement.style.color = 'green';
+      document.getElementById('guess').disabled = true;
+    } else if (guess < targetNumber) {
+      messageElement.textContent = 'Try a higher number.';
+      messageElement.style.color = 'red';
+    } else {
+      messageElement.textContent = 'Try a lower number.';
+      messageElement.style.color = 'red';
+    }
+
+    if (attempts >= maxAttempts) {
+      messageElement.textContent = `Game over! The number was ${targetNumber}.`;
+      messageElement.style.color = 'blue';
+      document.getElementById('guess').disabled = true;
+    }
+
+    attemptsElement.textContent = attempts;
+  }
+</script>
+</body>
+</html>
